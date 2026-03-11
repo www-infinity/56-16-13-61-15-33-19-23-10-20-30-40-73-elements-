@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HEM Visual Lab — 4 Atomic-Scale Demonstrations</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="visualize.css" />
+</head>
+<body class="vlab-page">
+
+  <!-- ═══════════════════════════════════════════════════════ NAV -->
+  <nav class="nav vlab-nav" aria-label="Visual lab navigation">
+    <a class="nav__logo" href="index.html">⚗️ HEM Lab</a>
+    <ul class="nav__links">
+      <li><a href="#vlab-lattice">🔬 Lattice</a></li>
+      <li><a href="#vlab-betavolt">⚡ Power Core</a></li>
+      <li><a href="#vlab-sps">🔥 Forge</a></li>
+      <li><a href="#vlab-device">📱 Device</a></li>
+    </ul>
+    <a href="index.html" class="btn btn--ghost vlab-back-btn">← Recipe Book</a>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════ HERO -->
+  <header class="vlab-hero">
+    <div class="vlab-hero__particles" aria-hidden="true">
+      <span class="particle" style="--x:8%;--y:30%;--s:55px;--c:#d946ef;--d:0s"></span>
+      <span class="particle" style="--x:85%;--y:25%;--s:40px;--c:#06b6d4;--d:.7s"></span>
+      <span class="particle" style="--x:50%;--y:65%;--s:70px;--c:#f59e0b;--d:1.3s"></span>
+      <span class="particle" style="--x:25%;--y:70%;--s:45px;--c:#10b981;--d:.4s"></span>
+      <span class="particle" style="--x:72%;--y:55%;--s:35px;--c:#8b5cf6;--d:1.1s"></span>
+    </div>
+    <div class="container">
+      <p class="hero__eyebrow">Interactive Atomic Demonstrations</p>
+      <h1 class="vlab-hero__title">
+        <span class="highlight highlight--magenta">Visual Lab</span>
+      </h1>
+      <p class="vlab-hero__sub">
+        Four live canvas animations — from the atomic lattice to the finished device.
+        Drag the 3D lattice. Slide to apply pressure. Fire radiation. Watch the Living Metal respond.
+      </p>
+      <div class="vlab-toc">
+        <a href="#vlab-lattice"  class="vlab-toc-item">
+          <span class="vlab-toc-num">01</span>
+          <span>3D HEA Lattice</span>
+          <em>Strain heatmap · Pm β-emission · Ne cage · Stress slider</em>
+        </a>
+        <a href="#vlab-betavolt" class="vlab-toc-item">
+          <span class="vlab-toc-num">02</span>
+          <span>Power Core</span>
+          <em>Betavoltaic β⁻ particles · EH pairs · Current flow</em>
+        </a>
+        <a href="#vlab-sps"     class="vlab-toc-item">
+          <span class="vlab-toc-num">03</span>
+          <span>The Forge</span>
+          <em>SPS pistons · Lightning plasma · Heat map</em>
+        </a>
+        <a href="#vlab-device"  class="vlab-toc-item">
+          <span class="vlab-toc-num">04</span>
+          <span>Device Assembly</span>
+          <em>4-layer exploded view · Piezo screen · 50-year overlay</em>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ═══════════════════════════════════════ VIZ 1: LATTICE -->
+    <section id="vlab-lattice" class="vlab-section">
+      <div class="container">
+
+        <div class="vlab-sec-header">
+          <div class="vlab-badge">01</div>
+          <div>
+            <h2>The Living Lattice</h2>
+            <p>A 3D BCC crystal of all 13 elements. Bonds are coloured by strain — <span class="c-cyan">blue-green</span> is relaxed, <span class="c-amber">amber</span> is under tension, <span class="c-red">red-white</span> is maximum stress. The disorder that looks like chaos <em>is</em> the strength.</p>
+          </div>
+        </div>
+
+        <div class="vlab-main-layout">
+
+          <!-- Canvas -->
+          <div class="vlab-canvas-wrap" id="latticeWrap">
+            <canvas id="latticeCanvas" aria-label="Interactive 3D HEA lattice — drag to rotate"></canvas>
+            <div class="canvas-hint" id="latticeHint">⬡ Drag to rotate</div>
+          </div>
+
+          <!-- Control + Legend panel -->
+          <aside class="vlab-panel">
+
+            <!-- Stress slider -->
+            <div class="ctrl-group">
+              <div class="ctrl-group__head">
+                <span class="ctrl-group__label">🔩 Apply Pressure</span>
+                <span class="ctrl-value" id="stressVal">0 MPa</span>
+              </div>
+              <input type="range" id="stressSlider" class="stress-slider" min="0" max="100" value="0"
+                     aria-label="Stress pressure slider — 0 to 200 MPa" />
+              <div class="slider-ends">
+                <span>Relaxed</span>
+                <span>200 MPa</span>
+              </div>
+              <p class="ctrl-note">Compresses the lattice along Y, activates Ne nanobubble glow, reddens high-strain bonds.</p>
+            </div>
+
+            <!-- Buttons -->
+            <div class="ctrl-btns">
+              <button class="vlab-btn vlab-btn--rad" id="fireRadiation">☢️ Fire Radiation</button>
+              <button class="vlab-btn vlab-btn--reset" id="resetLattice">↺ Reset View</button>
+            </div>
+
+            <!-- Strain key -->
+            <div class="strain-key">
+              <p class="strain-key__label">Bond Strain</p>
+              <div class="strain-bar"></div>
+              <div class="strain-ends">
+                <span>Low (similar sizes)</span>
+                <span>High (huge↔tiny)</span>
+              </div>
+            </div>
+
+            <!-- Element legend -->
+            <div class="vlab-legend">
+              <p class="vlab-legend__title">All 13 Elements</p>
+              <div class="legend-grid" id="legendGrid"></div>
+            </div>
+
+          </aside>
+        </div>
+
+        <!-- Feature callout cards -->
+        <div class="feature-row">
+          <div class="feat-card feat--chaos">
+            <div class="feat-icon">💥</div>
+            <h3>Lattice Strain Heatmap</h3>
+            <p>Ba (2.15 Å) and K (2.03 Å) push the lattice outward; P (1.07 Å) and S (1.04 Å) pull it tight. The resulting internal tension scatters dislocations — cracks can't propagate through the chaos.</p>
+          </div>
+          <div class="feat-card feat--ne">
+            <div class="feat-icon">🫧</div>
+            <h3>Neon Cage &amp; Radiation Hit</h3>
+            <p>Ne atoms sit in interstitial voids, caged by surrounding metal atoms. Click <strong>☢️ Fire Radiation</strong> — the streak hits the Ne bubble, which absorbs the impact and vibrates harder, protecting the rest of the structure.</p>
+          </div>
+          <div class="feat-card feat--pm">
+            <div class="feat-icon">⚡</div>
+            <h3>Pm Beta Emission</h3>
+            <p>Every few seconds, a Pm atom fires a beta particle (β⁻ electron) that bounces through the lattice until captured by P or As collector atoms — turning the crystal into a self-powered micro-circuit.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════ VIZ 2: BETAVOLTAIC -->
+    <section id="vlab-betavolt" class="vlab-section vlab-section--dark">
+      <div class="container">
+
+        <div class="vlab-sec-header">
+          <div class="vlab-badge vlab-badge--2">02</div>
+          <div>
+            <h2>The Power Core — Betavoltaic Cell</h2>
+            <p>Pm-147 sheets between semiconductor layers emit β⁻ electrons continuously.
+               Each electron hits the AlAs converter, generating an electron-hole pair and a tiny burst of current.
+               Silently. For 50 years.</p>
+          </div>
+        </div>
+
+        <div class="vlab-main-layout vlab-main-layout--rev">
+          <div class="vlab-canvas-wrap vlab-canvas-wrap--bv">
+            <canvas id="betavoltCanvas" aria-label="Betavoltaic cell cross-section animation"></canvas>
+          </div>
+          <aside class="vlab-panel vlab-panel--bv">
+            <div class="bv-stats">
+              <div class="bv-stat"><span>Source</span><strong>Pm-147 β⁻ emitter</strong></div>
+              <div class="bv-stat"><span>β energy</span><strong>224 keV / decay</strong></div>
+              <div class="bv-stat"><span>Converter</span><strong>AlAs / AlP junction</strong></div>
+              <div class="bv-stat"><span>Power density</span><strong>~5 µW / cm²</strong></div>
+              <div class="bv-stat"><span>Operational life</span><strong>~50 years</strong></div>
+              <div class="bv-stat"><span>Radiation type</span><strong>β⁻ (low penetration)</strong></div>
+              <div class="bv-stat"><span>Shielding</span><strong>1 mm Al chassis</strong></div>
+            </div>
+            <div class="bv-layers">
+              <div class="bv-layer bv-layer--al"><strong>Al layer</strong><span>Electron converter — current flows out ↑</span></div>
+              <div class="bv-layer bv-layer--pm"><strong>☢️ Pm-147</strong><span>Emits β⁻ in both directions</span></div>
+              <div class="bv-layer bv-layer--alas"><strong>AlAs / AlP</strong><span>Converter matrix — current flows out ↓</span></div>
+            </div>
+          </aside>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ VIZ 3: SPS -->
+    <section id="vlab-sps" class="vlab-section">
+      <div class="container">
+
+        <div class="vlab-sec-header">
+          <div class="vlab-badge vlab-badge--3">03</div>
+          <div>
+            <h2>The Forge — Spark Plasma Sintering</h2>
+            <p>Hydraulic pistons compress 13-element powder at 200 MPa while 50 kA pulsed DC arcs between particles, heating them to 1400 °C in under 5 minutes. The Ne gas is trapped in closed pores before it can escape.</p>
+          </div>
+        </div>
+
+        <canvas id="spsCanvas" class="sps-canvas-full" aria-label="Spark Plasma Sintering chamber animation"></canvas>
+
+        <div class="sps-legend">
+          <div class="sps-leg-item"><span style="background:#9ca3af"></span>Graphite Die + Pistons</div>
+          <div class="sps-leg-item"><span style="background:#f59e0b"></span>Force Direction (▼▲)</div>
+          <div class="sps-leg-item"><span style="background:#60a5fa"></span>Plasma Arcs (50 kA DC)</div>
+          <div class="sps-leg-item sps-leg-heat"><span></span>Joule Heat Glow</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ VIZ 4: DEVICE -->
+    <section id="vlab-device" class="vlab-section vlab-section--dark">
+      <div class="container">
+
+        <div class="vlab-sec-header">
+          <div class="vlab-badge vlab-badge--4">04</div>
+          <div>
+            <h2>The Device — Exploded Assembly</h2>
+            <p>Four specialised material sub-prototypes, each drawn from a different subset of the 13 elements, stacked into a complete self-powered system. Press the screen layer to see the piezoelectric response.</p>
+          </div>
+        </div>
+
+        <div class="device-wrap">
+
+          <div class="device-exploded" id="deviceExploded" role="img" aria-label="Exploded 4-layer device assembly">
+
+            <!-- Layer 4: Chassis -->
+            <div class="dev-layer dev-layer--chassis">
+              <div class="dev-callout dev-callout--right">
+                <strong>🛡️ Chassis Shell</strong>
+                <span>Al · Zn · Zr · Ne</span>
+                <em>Ne nanobubbles block β⁻ radiation</em>
+              </div>
+              <div class="dev-layer__body">
+                <div class="dev-layer__inner">
+                  <span class="dev-layer__label">RADIATION SHIELD — 0.8 mm</span>
+                  <div class="dev-chips">
+                    <span class="sys-chip sys-chip--post">Al<sub>13</sub></span>
+                    <span class="sys-chip sys-chip--transition">Zn<sub>30</sub></span>
+                    <span class="sys-chip sys-chip--transition">Zr<sub>40</sub></span>
+                    <span class="sys-chip sys-chip--noble">Ne<sub>10</sub></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Layer 3: Screen -->
+            <div class="dev-layer dev-layer--screen">
+              <div class="dev-callout dev-callout--left">
+                <strong>📺 Piezo-Glass Screen</strong>
+                <span>Ba · Ca · Zr · Ta</span>
+                <em>Touch → electricity (d₃₃ &gt; 200 pC/N)</em>
+              </div>
+              <div class="dev-layer__body dev-layer__body--screen" role="button" tabindex="0"
+                   aria-label="Press the screen to activate piezoelectric effect">
+                <div class="dev-layer__inner">
+                  <span class="dev-layer__label">PIEZOELECTRIC DISPLAY — 200 nm film</span>
+                  <div class="dev-chips">
+                    <span class="sys-chip sys-chip--alkaline">Ba<sub>56</sub></span>
+                    <span class="sys-chip sys-chip--alkaline">Ca<sub>20</sub></span>
+                    <span class="sys-chip sys-chip--transition">Zr<sub>40</sub></span>
+                    <span class="sys-chip sys-chip--transition">Ta<sub>73</sub></span>
+                  </div>
+                  <p class="screen-hint">👆 Press to activate piezoelectric response</p>
+                </div>
+                <div class="piezo-ripple" aria-hidden="true"></div>
+              </div>
+            </div>
+
+            <!-- Layer 2: CPU/LED -->
+            <div class="dev-layer dev-layer--logic">
+              <div class="dev-callout dev-callout--right">
+                <strong>💡 CPU / LED Logic</strong>
+                <span>Al · P · As · Zn</span>
+                <em>III-V semiconductor — 5× faster than Si</em>
+              </div>
+              <div class="dev-layer__body">
+                <div class="dev-layer__inner">
+                  <span class="dev-layer__label">SEMICONDUCTOR BRAIN — 10 nm nodes</span>
+                  <div class="dev-chips">
+                    <span class="sys-chip sys-chip--post">Al<sub>13</sub></span>
+                    <span class="sys-chip sys-chip--nonmetal">P<sub>15</sub></span>
+                    <span class="sys-chip sys-chip--nonmetal">As<sub>33</sub></span>
+                    <span class="sys-chip sys-chip--transition">Zn<sub>30</sub></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Layer 1: Battery -->
+            <div class="dev-layer dev-layer--battery">
+              <div class="dev-callout dev-callout--left">
+                <strong>🔋 Nuclear Battery</strong>
+                <span>Pm · Al · P</span>
+                <em>50-year betavoltaic cell — no charging</em>
+              </div>
+              <div class="dev-layer__body">
+                <div class="dev-layer__inner">
+                  <span class="dev-layer__label">NUCLEAR CORE — SOLID STATE</span>
+                  <div class="dev-chips">
+                    <span class="sys-chip sys-chip--rare">Pm<sub>61</sub></span>
+                    <span class="sys-chip sys-chip--post">Al<sub>13</sub></span>
+                    <span class="sys-chip sys-chip--nonmetal">P<sub>15</sub></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /.device-exploded -->
+
+          <div class="device-footer">
+            <div class="zero-charge-badge">
+              ZERO-CHARGE &nbsp;·&nbsp; 50-YEAR OPERATIONAL LIFE
+            </div>
+            <button class="vlab-btn vlab-btn--device" id="toggleDevice">
+              📦 Collapse Assembly
+            </button>
+          </div>
+
+        </div><!-- /.device-wrap -->
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════ FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom">
+        <p>⚗️ HEM Visual Lab &nbsp;—&nbsp; <a href="index.html">← Back to Recipe Book</a></p>
+        <p class="footer__elements">Ba · S · Al · Pm · P · As · K · V · Ne · Ca · Zn · Zr · Ta</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="visualize.js"></script>
+</body>
+</html>
