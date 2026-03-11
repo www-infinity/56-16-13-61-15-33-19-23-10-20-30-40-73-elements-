@@ -1412,3 +1412,12 @@ img { max-width: 100%; display: block; }
 
 .nav__links a.active { color: var(--text-primary); }
 
+
+/* Visual Lab CTA */
+.btn--lab {
+  background: linear-gradient(135deg, #d946ef, #8b5cf6);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(217,70,239,.35);
+}
+.btn--lab:hover { box-shadow: 0 8px 30px rgba(217,70,239,.55); }
+.nav__link--lab { color: var(--magenta) !important; font-weight: 800 !important; }
